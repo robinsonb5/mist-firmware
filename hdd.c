@@ -637,7 +637,7 @@ void GetHardfileGeometry(hdfTYPE *pHDF)
       if (pHDF->file.size == 0) return;
       total = pHDF->file.size / 512;
 			cyllimit-=1;  // leave headroom for the fake RDB
-      return;
+      break;
     case HDF_FILE:
       if (pHDF->file.size == 0) return;
       total = pHDF->file.size / 512;
