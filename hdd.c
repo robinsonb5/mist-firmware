@@ -636,8 +636,10 @@ void GetHardfileGeometry(hdfTYPE *pHDF)
     case (HDF_FILE | HDF_SYNTHRDB):
       if (pHDF->file.size == 0) return;
       total = pHDF->file.size / 512;
-			cyllimit-=1;  // leave headroom for the fake RDB
-      break;
+      pHDF->heads = 1;
+      pHDF->sectors = 32;
+      pHDF->cylinders = total/32 + 1;  // Add a cylinder for the fake RDB.
+      return;
     case HDF_FILE:
       if (pHDF->file.size == 0) return;
       total = pHDF->file.size / 512;
