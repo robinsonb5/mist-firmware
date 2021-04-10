@@ -62,6 +62,7 @@ typedef struct {
   bool ignore_boot_mode: 1;  // don't use boot mode even if device supports it
   bool has_boot_mode: 1;     // device supports boot mode
   bool is_5200daptor: 1;     // device is a 5200daptor with special key handling
+  bool is_arduino: 1;        // device is arduino-based so may have faulty bootp-style packets
   uint16_t key_state;        // needed to detect key state changes in 5200daptor
   
   // additional info extracted from the report descriptor

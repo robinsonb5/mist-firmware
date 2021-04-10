@@ -192,6 +192,7 @@ static uint8_t usb_hid_parse_conf(usb_device_t *dev, uint8_t conf, uint16_t len)
 					info->iface[info->bNumIfaces].ignore_boot_mode = false;
 					info->iface[info->bNumIfaces].has_boot_mode = false;
 					info->iface[info->bNumIfaces].is_5200daptor = false;
+					info->iface[info->bNumIfaces].is_arduino = false;
 					info->iface[info->bNumIfaces].key_state = 0;
 					info->iface[info->bNumIfaces].device_type = HID_DEVICE_UNKNOWN;
 					info->iface[info->bNumIfaces].conf.type = REPORT_TYPE_NONE;
@@ -363,6 +364,7 @@ static uint8_t usb_hid_init(usb_device_t *dev) {
 				   (info->iface[i].conf.report_size == 8)) {
 				  iprintf("HID NONE: is keyboard (arduino?)\n");
 				  info->iface[i].device_type = REPORT_TYPE_KEYBOARD;
+				  info->iface[i].is_arduino = true;
 				  info->iface[i].has_boot_mode = true;   // assume that the report is boot mode style as it's 8 bytes in size
 				}
 			}
@@ -648,8 +650,11 @@ static void usb_process_iface (usb_hid_iface_info_t *iface,
 		
 		if(iface->device_type == HID_DEVICE_KEYBOARD) {
 			// boot kbd needs at least eight bytes
+			int mod=0;
+			if(iface->is_arduino && read>=9)
+				mod+=1;
 			if(read >= 8) {
-				user_io_kbd(buf[0], buf+2, UIO_PRIORITY_KEYBOARD, iface->conf.vid, iface->conf.pid);
+				user_io_kbd(buf[mod], buf+mod+2, UIO_PRIORITY_KEYBOARD, iface->conf.vid, iface->conf.pid);
 			}
 		}
 	}
